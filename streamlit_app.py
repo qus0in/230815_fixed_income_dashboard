@@ -7,6 +7,12 @@ dt = st.date_input('🗓️ 조회할 일자')
 
 try:
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
-    st.dataframe(df)
+    st.dataframe(df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+
+        }
+    )
 except:
     st.info('🫠 데이터가 없습니다')
