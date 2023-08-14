@@ -7,6 +7,7 @@ dt = st.date_input('🗓️ 조회할 일자')
 
 try:
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
+    df.trqu = df.trqu.astype('int')
     st.dataframe(df,
         use_container_width=True,
         hide_index=True,
