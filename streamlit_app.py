@@ -16,7 +16,7 @@ try:
             'trqu': '거래량',
             'clprPrc': '가격',
             'clprBnfRt': '수익률',
-            'bondSrfcInrt': '표면이율'
+            'bondSrfcInrt': '표면이율',
             'scrsItmsKcdNm': '분류',
             'bondIsurNm': '발행',
             'bondExprDt': '만기일',
