@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import data
 
 st.title('🏃 채권 모아보기')
@@ -20,8 +21,7 @@ column_config = {
             'rating': '신용도',
         }
 
-# try:
-with st.container():
+try:
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
     df.trqu = df.trqu.astype('int')
     df.kisScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
@@ -35,5 +35,5 @@ with st.container():
         use_container_width=True,
         hide_index=True,
         column_config=column_config)
-# except:
-#     st.info('🫠 데이터가 없습니다')
+except:
+    st.info('🫠 데이터가 없습니다')
