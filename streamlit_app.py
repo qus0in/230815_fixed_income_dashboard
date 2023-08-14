@@ -24,18 +24,15 @@ try:
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
     df.trqu = df.trqu.astype('int')
     df.kisScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
-    df.niceScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
-    df.bondExprDt = pd.to_datetime(
-        df.bondExprDt.apply(str),
-        format='%Y%m%d', errors='coerce').dt.date
-    df.rating = df.apply(lambda x: '/'.join(set([str(y).replace('0', '')
+    df.niceScrsItmsKcdNm = df.niceScrsItmsKcdNm.str.replace('0', '') 
+    df.bondExprDt = pd.to_datetime(df.bondExprDt, format='%Y%m%d', errors='coerce').dt.date
+    df['rating'] = df.apply(lambda x: '/'.join(set([str(y).replace('0', '')
                 for y in (x.kisScrsItmsKcdNm, x.kbpScrsItmsKcdNm, x.niceScrsItmsKcdNm)
                 if str(y) != 'nan'])), axis=1)
     st.dataframe(df.iloc[:,
         [0,4,5,1,3,7,6,8,12]],
         use_container_width=True,
         hide_index=True,
-        column_config=column_config,
-    )
+        column_config=column_config)
 except:
     st.info('🫠 데이터가 없습니다')
