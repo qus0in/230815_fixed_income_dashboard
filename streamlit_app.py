@@ -23,7 +23,7 @@ try:
             'intPayCyclCtt': '이자주기',
             'kisScrsItmsKcdNm': '한국신용평가',
             'kbpScrsItmsKcdNm': '한국자산평가',
-            'niceScrsItmsKcdNm': 'NICE평가정보'
+            'niceScrsItmsKcdNm': 'NICE평가정보',
         },
     )
 except:
