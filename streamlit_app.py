@@ -20,7 +20,8 @@ column_config = {
             'rating': '신용도',
         }
 
-try:
+# try:
+with st.container():
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
     df.trqu = df.trqu.astype('int')
     df.kisScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
@@ -34,5 +35,5 @@ try:
         use_container_width=True,
         hide_index=True,
         column_config=column_config)
-except:
-    st.info('🫠 데이터가 없습니다')
+# except:
+#     st.info('🫠 데이터가 없습니다')
