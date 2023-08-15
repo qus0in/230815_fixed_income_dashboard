@@ -30,6 +30,8 @@ try:
     df['rating'] = df.apply(lambda x: '/'.join(set([str(y).replace('0', '')
                 for y in (x.kisScrsItmsKcdNm, x.kbpScrsItmsKcdNm, x.niceScrsItmsKcdNm)
                 if str(y) != 'nan'])), axis=1)
+    with st.container():
+        st.write('hello!')
     st.dataframe(df.iloc[:,
         [0,4,5,1,3,7,6,8,12]],
         use_container_width=True,
