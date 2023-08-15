@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import data
 
 st.title('🏃 채권 모아보기')
@@ -19,21 +18,40 @@ column_config = {
             # 'kbpScrsItmsKcdNm': '한국자산평가',
             # 'niceScrsItmsKcdNm': 'NICE평가정보',
             'rating': '신용도',
+            'afterTax': '세후수익률',
         }
 
 try:
     df = data.get_bond_info(dt.strftime('%Y%m%d'))
-    df.trqu = df.trqu.astype('int')
-    df.kisScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
-    df.niceScrsItmsKcdNm = df.niceScrsItmsKcdNm.str.replace('0', '') 
-    df.bondExprDt = pd.to_datetime(df.bondExprDt, format='%Y%m%d', errors='coerce').dt.date
-    df['rating'] = df.apply(lambda x: '/'.join(set([str(y).replace('0', '')
-                for y in (x.kisScrsItmsKcdNm, x.kbpScrsItmsKcdNm, x.niceScrsItmsKcdNm)
-                if str(y) != 'nan'])), axis=1)
-    st.dataframe(df.iloc[:,
-        [0,4,5,1,3,7,6,8,12]],
+    with st.container():
+        st.subheader('🌱 필터')
+        col1, col2, col3  = st.columns(3)
+        with col1:
+            r = st.radio('🌶️ 거래량', ['없음', '50% 이상', '75% 이상'])
+            if r != '없음':
+                df.query(f'trqu > {df.trqu.quantile(.5 if r == "50% 이상" else .75)}', inplace=True)
+        with col2:
+            invest = st.radio('🍺 투자등급 이상', ['미적용', '적용'])
+            if invest == '적용':
+                df.query(f'not rating.str.contains("B") or rating.str.contains("BBB")', inplace=True)
+        with col3:
+            ms = st.multiselect(
+                '🍅 종류', ['후순위', '신종자본', '조건부자본', '전환사채'],
+                default=['후순위', '신종자본', '조건부자본', '전환사채'])
+            if '후순위' not in ms:
+                df.query('not itmsNm.str.contains("\(후\)") ', inplace=True)
+            if '신종자본' not in ms:
+                df.query('not itmsNm.str.contains("신종") ', inplace=True)
+            if '조건부자본' not in ms:
+                df.query('not itmsNm.str.contains("\(상\)") ', inplace=True)
+            if '전환사채' not in ms:
+                df.query('not itmsNm.str.contains("CB") ', inplace=True)
+
+    st.dataframe(df,
         use_container_width=True,
         hide_index=True,
         column_config=column_config)
-except:
+except data.NoDataError:
     st.info('🫠 데이터가 없습니다')
+except Exception as e:
+    st.error(e)

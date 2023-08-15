@@ -17,13 +17,14 @@ def get_bond_price_info(base_date: str):
     response = requests.get(URL, params=params)
     df = pd.DataFrame(response.json()['response']['body']['items']['item'])
     df = df.loc[:, ['isinCd', 'itmsNm', 'trqu', 'clprPrc', 'clprBnfRt']]
+    df.trqu = df.trqu.astype('int')
+    df.clprBnfRt = df.clprBnfRt.astype('float')
     df.set_index('isinCd', inplace=True)
     return df
 
 @st.cache_data
 def get_bond_base_info(base_date: str):
     URL =  f'{BASE_URL}/GetBondIssuInfoService/getBondBasiInfo'
-    접속키 = os.getenv('ACCESS_KEY')
     params = dict(
         serviceKey=os.getenv('ACCESS_KEY'),
         resultType='json',
@@ -36,12 +37,26 @@ def get_bond_base_info(base_date: str):
         'isinCd', 'scrsItmsKcdNm', 'bondIsurNm', 'bondExprDt', 'bondSrfcInrt', 'intPayCyclCtt', 
         'kisScrsItmsKcdNm', 'kbpScrsItmsKcdNm', 'niceScrsItmsKcdNm'
     ]]
+    df.bondSrfcInrt = df.bondSrfcInrt.astype('float')
     df.set_index('isinCd', inplace=True)
     return df
 
 @st.cache_data
 def get_bond_info(base_date: str):
-    price_info = get_bond_price_info(base_date)
-    base_info = get_bond_base_info(base_date)
-    df = price_info.join(base_info, how='inner')
-    return df
+    try:
+        price_info = get_bond_price_info(base_date)
+        base_info = get_bond_base_info(base_date)
+        df = price_info.join(base_info, how='inner')
+    except:
+        raise NoDataError()
+    df.kisScrsItmsKcdNm = df.kisScrsItmsKcdNm.str.replace('0', '') 
+    df.niceScrsItmsKcdNm = df.niceScrsItmsKcdNm.str.replace('0', '') 
+    df.bondExprDt = pd.to_datetime(df.bondExprDt, format='%Y%m%d', errors='coerce').dt.date
+    df['rating'] = df.apply(lambda x: '/'.join(set([str(y).replace('0', '')
+                for y in (x.kisScrsItmsKcdNm, x.kbpScrsItmsKcdNm, x.niceScrsItmsKcdNm)
+                if str(y) != 'nan'])), axis=1)
+    df['afterTax'] = df.clprBnfRt * (1 - 0.154)
+    return df.iloc[:, [0,4,5,1,3,7,13,6,8,12]].sort_values('trqu', ascending=False)
+
+class NoDataError(Exception):
+    pass
