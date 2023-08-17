@@ -6,7 +6,7 @@ import pandas as pd
 st.title('🏃 채권 모아보기')
 
 dt = st.date_input('🗓️ 조회할 일자')
-st.toast('T+1 09:00 이후에 업데이트', icon='🗓️')
+st.toast('T+1 12:00 이후에 업데이트', icon='🗓️')
 column_config = {
             'itmsNm': '채권명',
             'trqu': '거래량',
