@@ -15,6 +15,7 @@ def get_bond_price_info(base_date: str):
         numOfRows=1000,
     )
     response = requests.get(URL, params=params)
+    # print(response.json())
     df = pd.DataFrame(response.json()['response']['body']['items']['item'])
     df = df.loc[:, ['isinCd', 'itmsNm', 'trqu', 'clprPrc', 'clprBnfRt']]
     df.trqu = df.trqu.astype('int')
@@ -32,6 +33,7 @@ def get_bond_base_info(base_date: str):
         numOfRows=30000,
     )
     response = requests.get(URL, params=params)
+    # print(response.json())
     df = pd.DataFrame(response.json()['response']['body']['items']['item'])
     df = df.loc[:, [
         'isinCd', 'scrsItmsKcdNm', 'bondIsurNm', 'bondExprDt', 'bondSrfcInrt', 'intPayCyclCtt', 

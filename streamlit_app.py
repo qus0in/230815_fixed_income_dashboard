@@ -59,6 +59,7 @@ try:
         if '전환사채' not in ms:
             df.query('not itmsNm.str.contains("CB") ', inplace=True)
 
+    st.write(f"**🥢 검색된 채권** : {len(df)}건")
     st.dataframe(df,
         use_container_width=True,
         hide_index=True,
