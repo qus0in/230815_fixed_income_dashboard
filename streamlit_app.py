@@ -3,6 +3,7 @@ import data
 import datetime
 import pandas as pd
 
+st.set_page_config(page_title="채권왕 변채권", page_icon="🦁")
 st.title('🏃 채권 모아보기')
 
 dt = st.date_input('🗓️ 조회할 일자')
