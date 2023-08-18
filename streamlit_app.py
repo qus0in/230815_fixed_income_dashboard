@@ -7,7 +7,8 @@ import pandas as pd
 st.set_page_config(page_title="채권왕 본드", page_icon="🦁")
 st.title('🏃 채권 모아보기')
 
-dt = st.date_input('🗓️ 조회할 일자', datetime.date.today() - relativedelta(days=1))
+dt = st.date_input('🗓️ 조회할 일자', datetime.date.today() - relativedelta(days=1),
+                   max_value=datetime.date.today() - relativedelta(days=1))
 st.toast('T+1 12:00 이후에 업데이트', icon='🗓️')
 column_config = {
             'itmsNm': '채권명',
