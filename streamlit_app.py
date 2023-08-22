@@ -68,7 +68,7 @@ try:
             placeholder='어떤 이자주기인 채권을 포함할까요?')
         for its in interest:
             if its not in ms2:
-                df.query('not itmsNm.str.contains(its)', inplace=True)
+                df.query(f'not itmsNm.str.contains({its})', inplace=True)
     st.write(f"**🥢 검색된 채권** : {len(df)}건")
     st.dataframe(df,
         use_container_width=True,
