@@ -58,7 +58,9 @@ def get_bond_info(base_date: str):
                 for y in (x.kisScrsItmsKcdNm, x.kbpScrsItmsKcdNm, x.niceScrsItmsKcdNm)
                 if str(y) != 'nan'])), axis=1)
     df['afterTax'] = df.clprBnfRt * (1 - 0.154)
-    return df.iloc[:, [0,4,5,1,3,7,13,6,8,12]].sort_values('trqu', ascending=False)
+    # 'itmsNm', 'trqu', 'clprPrc', 'clprBnfRt'
+    # 0, 1, 2
+    return df.iloc[:, [0,4,5,1,2,3,7,13,6,8,12]].sort_values('trqu', ascending=False)
 
 class NoDataError(Exception):
     pass
