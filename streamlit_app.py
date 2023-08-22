@@ -9,7 +9,7 @@ st.title('🏃 채권 모아보기')
 
 dt = st.date_input('🗓️ 조회할 일자', datetime.date.today() - relativedelta(days=1),
                    max_value=datetime.date.today() - relativedelta(days=1))
-st.toast('T+1 12:00 이후에 업데이트', icon='🗓️')
+# st.toast('T+1 12:00 이후에 업데이트', icon='🗓️')
 column_config = {
             'itmsNm': '채권명',
             'trqu': '거래량',
@@ -33,26 +33,26 @@ try:
         st.subheader('🌱 필터')
         col1, col2, col3, col4  = st.columns(4)
         with col1:
-            r = st.radio('🌶️ 거래량', ['없음', '80% 이상'])
+            r = st.radio('🌶️ 거래량', ['없음', '80% 이상'], index=1)
             if r == '80% 이상':
                 df.query(f'trqu > {df.trqu.quantile(.8)}', inplace=True)
         with col2:
-            invest = st.radio('🍺 투자등급 이상', ['미적용', '적용'])
+            invest = st.radio('🍺 투자등급 이상', ['미적용', '적용'], index=1)
             if invest == '적용':
                 df.query(f'not rating.str.contains("B") or rating.str.contains("BBB")', inplace=True)
         with col3:
-            duration = st.radio('🥃 최대 듀레이션', ['없음', '3년'])
+            duration = st.radio('🥃 최대 듀레이션', ['없음', '3년'], index=1)
             filter_date = (pd.Timestamp(datetime.datetime.today()) + pd.DateOffset(years=3)).date()
             if duration == '3년':
                 df.query(f'bondExprDt < @filter_date',
                          inplace=True)
         with col4:
-            earn = st.radio('🥃 최소 기대수익률', ['없음', '5%'])
+            earn = st.radio('🥃 최소 기대수익률', ['없음', '5%'], index=1)
             if earn == '5%':
                 df.query(f'afterTax >= 5', inplace=True)
         ms = st.multiselect(
             '🍅 종류', ['후순위', '신종자본', '조건부자본', '전환사채'],
-            default=['후순위', '신종자본', '조건부자본', '전환사채'],
+            default=[],
             placeholder='어떤 종류의 채권을 포함할까요?')
         if '후순위' not in ms:
             df.query('not itmsNm.str.contains("\(후\)") ', inplace=True)
