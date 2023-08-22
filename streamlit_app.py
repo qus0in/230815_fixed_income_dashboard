@@ -33,9 +33,9 @@ try:
         st.subheader('🌱 필터')
         col1, col2, col3, col4  = st.columns(4)
         with col1:
-            r = st.radio('🌶️ 거래량', ['없음', '50% 이상', '75% 이상'])
+            r = st.radio('🌶️ 거래량', ['없음', '50% 이상', '80% 이상'])
             if r != '없음':
-                df.query(f'trqu > {df.trqu.quantile(.5 if r == "50% 이상" else .75)}', inplace=True)
+                df.query(f'trqu > {df.trqu.quantile(.5 if r == "50% 이상" else .8)}', inplace=True)
         with col2:
             invest = st.radio('🍺 투자등급 이상', ['미적용', '적용'])
             if invest == '적용':
