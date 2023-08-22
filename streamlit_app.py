@@ -33,9 +33,9 @@ try:
         st.subheader('🌱 필터')
         col1, col2, col3, col4  = st.columns(4)
         with col1:
-            r = st.radio('🌶️ 거래량', ['없음', '50% 이상', '80% 이상'])
-            if r != '없음':
-                df.query(f'trqu > {df.trqu.quantile(.5 if r == "50% 이상" else .8)}', inplace=True)
+            r = st.radio('🌶️ 거래량', ['없음', '80% 이상'])
+            if r == '80% 이상':
+                df.query(f'trqu > {df.trqu.quantile(.8)}', inplace=True)
         with col2:
             invest = st.radio('🍺 투자등급 이상', ['미적용', '적용'])
             if invest == '적용':
@@ -62,7 +62,13 @@ try:
             df.query('not itmsNm.str.contains("\(상\)") ', inplace=True)
         if '전환사채' not in ms:
             df.query('not itmsNm.str.contains("CB") ', inplace=True)
-
+        interest = ['1개월', '3개월', '12개월']
+        ms2 = st.multiselect(
+            '🍌 이자주기', interest, default=interest,
+            placeholder='어떤 이자주기인 채권을 포함할까요?')
+        for its in interest:
+            if its not in ms2:
+                df.query('not itmsNm.str.contains(its)', inplace=True)
     st.write(f"**🥢 검색된 채권** : {len(df)}건")
     st.dataframe(df,
         use_container_width=True,
